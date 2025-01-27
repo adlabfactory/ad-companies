@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
+
+
 class RegisteredUserController extends Controller
 {
     /**
@@ -30,22 +32,22 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'handle' => 'required|unique:users,handle|max:50',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6|confirmed',
         ]);
+    
 
-        $user = User::create([
-            'username' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-       
-
+        // Création de l'utilisateur
+    $user = User::create([
+        'handle' => $request->handle,  // Le champ 'handle' est maintenant bien récupéré
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('home', absolute: false));
+        return redirect(route('dashboard', absolute: false));
     }
 }
