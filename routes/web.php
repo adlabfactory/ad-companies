@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     // Route pour la déconnexion
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+    Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     // Routes pour le profil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
