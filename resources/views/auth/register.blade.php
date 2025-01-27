@@ -49,4 +49,5 @@
             </x-primary-button>
         </div>
     </form>
+    <h1>Hello to Every One</h1>
 </x-guest-layout>
