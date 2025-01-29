@@ -2,17 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-
-class ProfileController extends Controller
+class UserController extends Controller
 {
-   
-    /**
+    public function userslists()
+    {
+        $users = User::all();
+        // Passer les utilisateurs à la vue
+        return view('admin-dashboard.users.userslist', compact('users'));
+    }
+    public function create()
+    {
+        return view('admin-dashboard.users.create');
+    }
+    public function index()
+    {
+        return view('admin-dashboard.users.profile');
+    }
+      /**
      * Display the user's profile form.
      */
     public function edit(Request $request): View
@@ -41,21 +55,11 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(User $user): RedirectResponse
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
         $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return Redirect::route('userslist');
     }
+   
+
 }

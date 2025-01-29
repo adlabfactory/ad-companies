@@ -5,6 +5,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController; 
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,10 +39,14 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     // Route pour le tableau de bord
     Route::get('/home', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/userslist', [UserController::class, 'userslists'])->name('userslist');
+    Route::get('/adduser', [UserController::class, 'create'])->name('adduser');
+    Route::get('/profileuser', [UserController::class, 'index'])->name('/profileuser');
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     // Route pour la déconnexion
     Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     // Routes pour le profil
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [UserController::class, 'update'])->name('profile.update');
+    Route::delete('/profile/{user}', [UserController::class, 'destroy'])->name('profile.destroy');
 });

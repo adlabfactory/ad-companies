@@ -1,12 +1,23 @@
 <aside class="sidebar">
+  <style>
+    .sidebar-logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%; /* Ajuste si nécessaire */
+    }
+  
+    .center-img {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
   <button type="button" class="sidebar-close-btn">
     <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
   </button>
   <div>
     <a href="index.html" class="sidebar-logo">
-      <img src="assets/images/logo.png" alt="site logo" class="light-logo">
-      <img src="assets/images/logo-light.png" alt="site logo" class="dark-logo">
-      <img src="assets/images/logo-icon.png" alt="site logo" class="logo-icon">
+      <img src="https://adlabfactory.com/wp-content/uploads/2024/12/Adlab-dark-Logo-siteweb.png" width="150" />
     </a>
   </div>
   <div class="sidebar-menu-area">
@@ -20,17 +31,17 @@
 </a>
 </li>
 <li>
-<a href="{{ route('dashboard') }}">
+<a href="{{ route('userslist') }}">
     <iconify-icon icon="mdi:account-group" class="menu-icon"></iconify-icon>
     <span>Users List</span> 
   </a>
-  <a href="{{ route('dashboard') }}">
+  <a href="{{ route('adduser') }}">
     <iconify-icon icon="mdi:account-plus" class="menu-icon"></iconify-icon>
     <span>Add User</span>
   </a>
 </li>
 <li>
-  <a href="{{ route('dashboard') }}">
+  <a href="{{ route('/profileuser') }}">
     <iconify-icon icon="mdi:account-circle" class="menu-icon"></iconify-icon>
     <span>Profile</span> 
   </a>
