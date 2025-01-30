@@ -40,13 +40,12 @@ Route::middleware('auth')->group(function () {
     // Route pour le tableau de bord
     Route::get('/home', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/userslist', [UserController::class, 'userslists'])->name('userslist');
-    Route::get('/profileuser', [UserController::class, 'index'])->name('/profileuser');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     // Route pour la déconnexion
     Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     // Routes pour le profil
     Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [UserController::class, 'update'])->name('profile.update');
+    Route::post('/profile', [UserController::class, 'update'])->name('profile.update');
     Route::delete('/profile/{user}', [UserController::class, 'destroy'])->name('profile.destroy');
     Route::get('/deletedusers', [UserController::class, 'deletedusers'])->name('deleteddusers');
     Route::get('profile/{user}', [UserController::class, 'restore'])->name('user.restore');
