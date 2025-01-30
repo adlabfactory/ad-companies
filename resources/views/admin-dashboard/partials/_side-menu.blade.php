@@ -35,7 +35,7 @@
     <iconify-icon icon="mdi:account-group" class="menu-icon"></iconify-icon>
     <span>Users List</span> 
   </a>
-  <a href="{{ route('adduser') }}">
+  <a href="{{ route('user.create') }}">
     <iconify-icon icon="mdi:account-plus" class="menu-icon"></iconify-icon>
     <span>Add User</span>
   </a>

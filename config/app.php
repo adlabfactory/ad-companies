@@ -77,6 +77,7 @@ return [
     | set to any locale for which you plan to have translation strings.
     |
     */
+    'Image' => 'Folklore\Image\Facades\Image',
 
     'locale' => env('APP_LOCALE', 'en'),
 

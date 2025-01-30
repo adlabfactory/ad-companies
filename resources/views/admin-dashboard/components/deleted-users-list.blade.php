@@ -1,9 +1,5 @@
-<!-- Ajouter Font Awesome dans le head -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-<style>
 
-
-</style>
 <div class="dashboard-main-body">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 ">
     </div>
@@ -17,10 +13,10 @@
             </div>
             <div class="d-flex gap-2"> <!-- Utilisation de Flexbox avec un espace entre les éléments -->
                 <button type="button" class="btn btn-outline-warning-600 radius-8 px-20 py-11">Add User</button>
-                <a href="{{ route('deleteddusers') }}" class="btn btn-outline-dark radius-8 px-20 py-11">
-                    <i class="fas fa-trash-alt"></i> 
+                <a href="{{ route('userslist') }}" class="btn btn-outline-dark radius-8 px-20 py-11">
+                    <i class="fas fa-users"></i>
                 </a>
-            </div>                       
+            </div>
         </div>
         <div class="card-body p-24">
             <div class="table-responsive scroll-sm">
@@ -46,47 +42,25 @@
                             <td class="text-center">
                                 {{ \Carbon\Carbon::parse($user->created_at)->format('Y-m-d') }}
                             </td>
-                
-                            <!-- Affichage du statut de l'utilisateur avec un switch -->
-                            <!--td class="text-center">
-                                <div class="form-switch switch-warning d-flex align-items-center gap-3">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="switch{{ $user->id }}"
-                                        {{ $user->is_active ? 'checked' : '' }}>
-                                </div>
-                            </!--td-->
-                
                             <!-- Affichage des actions -->
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
                                     <!-- Vue -->
-                                    <button type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                        <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
-                                    </button>
-                                    
-                                    <!-- Édition -->
-                                    <button type="button" class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                        <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
-                                    </button>
-                                    
-                                    <!-- Suppression -->
-                                    <form action="{{ route('profile.destroy', $user->id) }}" method="post">
-                                        @method('DELETE')
+                                    <form action="{{ route('user.restore', $user->id) }}" method="get" class="d-inline">
+                                        @method('GET')
                                         @csrf
-                                        <button type="submit" class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                            <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
+                                        <button type="submit" class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                            <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
                                         </button>
                                     </form>
                                     
+                                    
+                    
+     
                                 </div>
                             </td>
                         </tr>
                         @endforeach
-                        @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
                     </tbody>
                 </table>
                 
@@ -94,10 +68,6 @@
         </div>
     </div>
 </div>
-<div class="card-body p-24">
-        {{$users->links()}}
+<div class="pagination-custom">
+    {{$users->links()}}
 </div>
-
-
-
-
