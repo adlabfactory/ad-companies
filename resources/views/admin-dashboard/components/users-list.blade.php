@@ -59,9 +59,14 @@
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
                                     <!-- Vue -->
-                                    <button type="button" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                        <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
-                                    </button>                      
+                                    <form action="{{ route('user.showOtherProfiles', $user->id) }}" method="get">
+                                        @method('GET')
+                                        @csrf
+                                        <button type="submit" class="bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                            <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
+                                        </button>
+                                    </form>
+                                                         
                                     <!-- Suppression -->
                                     <form action="{{ route('profile.destroy', $user->id) }}" method="post">
                                         @method('DELETE')

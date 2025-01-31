@@ -1,3 +1,4 @@
 <x-layout>
-<h1>Hello Home User</h1>
+ 
+        @include('admin-dashboard.components.dashboard-cards')
 </x-layout>

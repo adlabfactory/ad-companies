@@ -102,20 +102,10 @@
                                 Edit Profile
                             </button>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link d-flex align-items-center justify-content-center px-24" 
-                                id="pills-change-passwork-tab" 
-                                data-bs-toggle="pill" 
-                                data-bs-target="#pills-change-passwork" 
-                                type="button" 
-                                role="tab" 
-                                aria-controls="pills-change-passwork" 
-                                aria-selected="false" 
-                                tabindex="-1">
-                                Change Password
-                            </button>
-                        </li>                          
+                                     
                     </ul>
+                    
+
                     <div class="tab-content" id="pills-tabContent">   
                         <div class="tab-pane fade show active" id="pills-edit-profile" role="tabpanel" aria-labelledby="pills-edit-profile-tab" tabindex="0">
                             <div class="d-flex justify-content-center">
@@ -125,9 +115,9 @@
                             <!-- Upload Image Start -->
                            
                             <!-- Upload Image End -->
-                            <form action="{{ route('profile.update') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('user.updateOtherProfiles', $user->id) }}" method="post" enctype="multipart/form-data">
                                 @csrf <!-- Protection CSRF -->
-                                @method('POST') <!-- Méthode HTTP PATCH -->
+                                @method('POST')
                                 <div class="mb-24 mt-16">
                                     <div class="mb-3 d-flex justify-content-center align-items-center">
                                         <img src="{{ asset($userWithProfile->profile_picture) }}" alt="Profile Image" class="img-thumbnail" style="max-width: 200px; max-height: 200px; object-fit: cover; border-radius: 50%;">
@@ -179,90 +169,8 @@
                             
                         </div>
 
-                        <div class="tab-pane fade" id="pills-change-passwork" role="tabpanel" aria-labelledby="pills-change-passwork-tab" tabindex="0">
-                            <form method="POST" action="{{ route('password.update') }}">
-                                @csrf
-                                <div class="mb-20">
-                                    <label for="your-password" class="form-label fw-semibold text-primary-light text-sm mb-8">New Password <span class="text-danger-600">*</span></label>
-                                    <div class="position-relative">
-                                        <input type="password" class="form-control radius-8" id="your-password" name="password" placeholder="Enter New Password*" required>
-                                        <span class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light" data-toggle="#your-password"></span>
-                                    </div>
-                                </div>
-                            
-                                <div class="mb-20">
-                                    <label for="confirm-password" class="form-label fw-semibold text-primary-light text-sm mb-8">Confirmed Password <span class="text-danger-600">*</span></label>
-                                    <div class="position-relative">
-                                        <input type="password" class="form-control radius-8" id="confirm-password" name="password_confirmation" placeholder="Confirm Password*" required>
-                                        <span class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light" data-toggle="#confirm-password"></span>
-                                    </div>
-                                </div>
-                            
-                                <div class="d-flex align-items-center justify-content-center gap-3 mt-4">
-                                    <button type="submit" class="btn" style="background-color: #ffda40; border-color: #ffda40; color:black; font-family: 'Arial', sans-serif; padding: 10px 90px; border-radius: 20px; font-size: 20px; font-weight: bold;">
-                                        Save
-                                    </button>
-                                </div>
-                            </form>
-                            
-                        </div>
+                      
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 </div>
             </div>
         </div>

@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController; 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\Auth\PasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,5 +52,8 @@ Route::middleware('auth')->group(function () {
     Route::get('profile/{user}', [UserController::class, 'restore'])->name('user.restore');
     Route::get('/usercreate', [UserController::class, 'adduser'])->name('user.create');
     Route::post('/usercreate', [UserController::class, 'create'])->name('user.create');
+    Route::get('/user/updateOtherProfiles/{user}', [UserController::class, 'showOtherProfiles'])->name('user.showOtherProfiles');
+    Route::post('/user/{id}/update-profile', [UserController::class, 'updateOtherProfiles'])->name('user.updateOtherProfiles');
+    Route::post('user/password/update', [PasswordController::class, 'update'])->name('password.update');
 
 });

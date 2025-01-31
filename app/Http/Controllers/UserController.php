@@ -202,11 +202,94 @@ class UserController extends Controller
     return redirect()->back()->with('success', 'Profile updated successfully!');  
 
     } 
+
+    public function showOtherProfiles($id)
+    {
+        $user = User::with('profile')->findOrFail($id);
+        $userId = $user->id;   
+        
+        $userWithProfile = DB::table('users')
+            ->join('profiles', 'users.id', '=', 'profiles.user_id')  // Jointure entre 'users' et 'profiles'
+            ->where('users.id', $userId)  // Filtrer par l'ID de l'utilisateur authentifié
+            ->select('users.*', 'profiles.*')  // Sélectionner toutes les colonnes des deux tables
+            ->first();
+            $data = [
+              'user' => $user,
+              'userWithProfile' => $userWithProfile
+          ];
+          return view('admin-dashboard.users.other-profiles', $data);
+     
+
+    
+    }
+
+
+  // update other profiles
+    public function updateOtherProfiles(Request $request, $id)
+{
+    // Vérifier si l'utilisateur est un admin
+    //if (!Auth::user() || !Auth::user()->is_admin) {
+       // return redirect()->back()->with('error', 'Accès refusé');
+    //}
+
+    // Récupérer l'utilisateur par son ID
+    $user = User::findOrFail($id);
+    
+    // Validation des champs du formulaire
+    $validated = $request->validate([
+        'first_name' => 'nullable|string|max:255',
+        'last_name' => 'nullable|string|max:255',
+        'phone' => 'nullable|string|max:15',
+        'email' => 'nullable|email|max:255', // Validation de l'email pour la table 'users'
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Si l'image est envoyée
+    ]);
+
+    // Mise à jour des champs dans la table 'profiles' via le Query Builder
+    if ($request->has('first_name')) {
+        DB::table('profiles')
+            ->where('user_id', $user->id)
+            ->update(['first_name' => $request->input('first_name')]);
+    }
+
+    if ($request->has('last_name')) {
+        DB::table('profiles')
+            ->where('user_id', $user->id)
+            ->update(['last_name' => $request->input('last_name')]);
+    }
+
+    if ($request->has('phone')) {
+        DB::table('profiles')
+            ->where('user_id', $user->id)
+            ->update(['phone' => $request->input('phone')]);
+    }
+
+    // Mise à jour de l'email dans la table 'users' via le Query Builder
+    if ($request->has('email')) {
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update(['email' => $request->input('email')]);
+    }
+
+    // Traitement de l'image (si une nouvelle image est envoyée)
+    if ($request->hasFile('image') && $request->file('image')->isValid()) {
+        $destinationPath = 'profiles/admin';  // Répertoire où les images seront stockées
+        $fileName = time() . '_' . $request->file('image')->getClientOriginalName(); // Crée un nom unique pour l'image
+        $request->file('image')->move(public_path($destinationPath), $fileName);
+        
+        $profilePicture = $destinationPath . '/' . $fileName;
+
+        // Mise à jour de l'image de profil dans la table 'profiles'
+        DB::table('profiles')
+            ->where('user_id', $user->id)
+            ->update(['profile_picture' => $profilePicture]);
+    }
+
+    return redirect()->route('user.showOtherProfiles', ['user' => $user]);
     }
     
     
   
-    
+}
       
   
   
