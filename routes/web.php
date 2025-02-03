@@ -8,15 +8,16 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Middleware\SuperAdminMiddleware;
 
 /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+|-------------------------------------------------------------------------- 
+| Web Routes 
+|-------------------------------------------------------------------------- 
+| 
+| Here is where you can register web routes for your application. These 
+| routes are loaded by the RouteServiceProvider within a group which 
+| contains the "web" middleware group. Now create something great! 
 |
 */
 
@@ -40,20 +41,27 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     // Route pour le tableau de bord
     Route::get('/home', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/userslist', [UserController::class, 'userslists'])->name('userslist');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    
     // Route pour la déconnexion
     Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+    
     // Routes pour le profil
     Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
     Route::post('/profile', [UserController::class, 'update'])->name('profile.update');
     Route::delete('/profile/{user}', [UserController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/deletedusers', [UserController::class, 'deletedusers'])->name('deleteddusers');
-    Route::get('profile/{user}', [UserController::class, 'restore'])->name('user.restore');
-    Route::get('/usercreate', [UserController::class, 'adduser'])->name('user.create');
-    Route::post('/usercreate', [UserController::class, 'create'])->name('user.create');
-    Route::get('/user/updateOtherProfiles/{user}', [UserController::class, 'showOtherProfiles'])->name('user.showOtherProfiles');
-    Route::post('/user/{id}/update-profile', [UserController::class, 'updateOtherProfiles'])->name('user.updateOtherProfiles');
     Route::post('user/password/update', [PasswordController::class, 'update'])->name('password.update');
-
+    
+    // Routes pour la gestion des utilisateurs (accessibles uniquement pour le rôle super-admin)
+    Route::middleware([SuperAdminMiddleware::class])->group(function () {
+        Route::get('/userslist', [UserController::class, 'userslists'])->name('userslist');
+        Route::get('/deletedusers', [UserController::class, 'deletedusers'])->name('deleteddusers');
+        Route::get('/usercreate', [UserController::class, 'adduser'])->name('user.create');
+        Route::post('/usercreate', [UserController::class, 'create'])->name('user.create');
+        Route::get('/user/updateOtherProfiles/{user}', [UserController::class, 'showOtherProfiles'])->name('user.showOtherProfiles');
+        Route::post('/user/{id}/update-profile', [UserController::class, 'updateOtherProfiles'])->name('user.updateOtherProfiles');
+        Route::get('profile/{user}', [UserController::class, 'restore'])->name('user.restore');
+    });
 });
+
+

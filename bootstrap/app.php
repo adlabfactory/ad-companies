@@ -14,10 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // Active le middleware stateful pour Sanctum
         $middleware->statefulApi();
 
-        // Middleware personnalisés (optionnel)
-        $middleware->append([
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        ]);
+        // Ajouter ton middleware personnalisé SuperAdminMiddleware
+       /* $middleware->append([
+            \App\Http\Middleware\SuperAdminMiddleware::class,
+        ]);*/
 
         // Middleware globaux (optionnel)
         $middleware->use([
@@ -31,3 +31,4 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
+    

@@ -31,7 +31,8 @@ class User extends Authenticatable
         'password',
         'handle',
         'is_active',
-        'created_at'
+        'created_at',
+        'role'
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -55,4 +56,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+ 
 }
