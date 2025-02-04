@@ -16,7 +16,7 @@
                 </form>
             </div>
             <div class="d-flex gap-2"> <!-- Utilisation de Flexbox avec un espace entre les éléments -->
-                <button type="button" class="btn btn-outline-warning-600 radius-8 px-20 py-11">Add User</button>
+                <a href="{{ route('user.create') }}" class="btn btn-outline-warning-600 radius-8 px-20 py-11">Add User</a>
                 <a href="{{ route('deleteddusers') }}" class="btn btn-outline-dark radius-8 px-20 py-11">
                     <i class="fas fa-trash-alt"></i> 
                 </a>
@@ -68,6 +68,7 @@
                                     </form>
                                                          
                                     <!-- Suppression -->
+                                    @if($user->role=='admin')
                                     <form action="{{ route('profile.destroy', $user->id) }}" method="post">
                                         @method('DELETE')
                                         @csrf
@@ -75,16 +76,20 @@
                                             <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                         </button>
                                     </form>
+                                @endif
+                                
                                     
                                 </div>
                             </td>
                         </tr>
                         @endforeach
                         @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
+                          <div class="alert alert-success position-relative">
+                          {{ session('success') }}
+                           <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>
+                        @endif
+
 
                     </tbody>
                 </table>

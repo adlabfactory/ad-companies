@@ -44,7 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     
     // Route pour la déconnexion
-    Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     
     // Routes pour le profil
     Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');

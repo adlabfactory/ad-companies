@@ -31,5 +31,6 @@
 
 <script src="{{ asset('assets/js/homeOneChart.js') }}"></script>
 
+
 </body>
 </html>

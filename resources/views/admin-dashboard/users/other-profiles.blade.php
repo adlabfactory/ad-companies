@@ -150,6 +150,16 @@
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="mb-20">
+                                            <label for="role" class="form-label fw-semibold text-primary-light text-sm mb-8">Role</label>
+                                            <select class="form-control radius-8" id="role" name="role">
+                                                <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                                                <option value="super-admin" {{ $user->role == 'super-admin' ? 'selected' : '' }}>Super Admin</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-sm-12">
+                                        <div class="mb-20">
                                             <label for="image" class="form-label fw-semibold text-primary-light text-sm mb-8">Image</label>
                             
                                             <div class="mb-20">

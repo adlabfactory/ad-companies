@@ -71,6 +71,7 @@ class UserController extends Controller
   // La creation d'un utilisateure
   public function create(Request $request)
   {
+      
       $validated = $request->validate([
           'email'    => 'required|email|unique:users,email',
           'password' => 'required|min:6|confirmed',  // Laravel attend 'password_confirmation'
@@ -79,12 +80,16 @@ class UserController extends Controller
           'phone'    => 'required|string',
           'image'    => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
       ]);
-  
+      $rememberToken = Str::random(60) . ':' . md5($validated['email']);  // Combine random + email hash pour garantir l'unicité
+
+      // Hachage du token avant de l'enregistrer
+      $hashedRememberToken = Hash::make($rememberToken);
       // Utilisation de QueryBuilder pour insérer l'utilisateur
       $userId = DB::table('users')->insertGetId([
           'handle'   => strtolower(substr($validated['fname'], 0, 1) . '.' . $validated['lname'] . '.' . substr(Str::uuid(), 0, 4)),
           'email'    => $validated['email'],
           'password' => Hash::make($validated['password']),
+          'remember_token' => $hashedRememberToken, // Hachage du token avant de l'enregistrer
       ]);
   
       // Traitement de l'image (conversion en base64 si présente)
@@ -225,72 +230,73 @@ class UserController extends Controller
 
 
   // update other profiles
-    public function updateOtherProfiles(Request $request, $id)
-{
-    // Vérifier si l'utilisateur est un admin
-    //if (!Auth::user() || !Auth::user()->is_admin) {
-       // return redirect()->back()->with('error', 'Accès refusé');
-    //}
+  public function updateOtherProfiles(Request $request, $id)
+  {
+     
 
-    // Récupérer l'utilisateur par son ID
-    $user = User::findOrFail($id);
-    
-    // Validation des champs du formulaire
-    $validated = $request->validate([
-        'first_name' => 'nullable|string|max:255',
-        'last_name' => 'nullable|string|max:255',
-        'phone' => 'nullable|string|max:15',
-        'email' => 'nullable|email|max:255', // Validation de l'email pour la table 'users'
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Si l'image est envoyée
-    ]);
-
-    // Mise à jour des champs dans la table 'profiles' via le Query Builder
-    if ($request->has('first_name')) {
-        DB::table('profiles')
-            ->where('user_id', $user->id)
-            ->update(['first_name' => $request->input('first_name')]);
-    }
-
-    if ($request->has('last_name')) {
-        DB::table('profiles')
-            ->where('user_id', $user->id)
-            ->update(['last_name' => $request->input('last_name')]);
-    }
-
-    if ($request->has('phone')) {
-        DB::table('profiles')
-            ->where('user_id', $user->id)
-            ->update(['phone' => $request->input('phone')]);
-    }
-
-    // Mise à jour de l'email dans la table 'users' via le Query Builder
-    if ($request->has('email')) {
-        DB::table('users')
-            ->where('id', $user->id)
-            ->update(['email' => $request->input('email')]);
-    }
-
-    // Traitement de l'image (si une nouvelle image est envoyée)
-    if ($request->hasFile('image') && $request->file('image')->isValid()) {
-        $destinationPath = 'profiles/admin';  // Répertoire où les images seront stockées
-        $fileName = time() . '_' . $request->file('image')->getClientOriginalName(); // Crée un nom unique pour l'image
-        $request->file('image')->move(public_path($destinationPath), $fileName);
-        
-        $profilePicture = $destinationPath . '/' . $fileName;
-
-        // Mise à jour de l'image de profil dans la table 'profiles'
-        DB::table('profiles')
-            ->where('user_id', $user->id)
-            ->update(['profile_picture' => $profilePicture]);
-    }
-
-    return redirect()->route('user.showOtherProfiles', ['user' => $user]);
-    }
-    
-    
+      // Récupérer l'utilisateur par son ID
+      $user = User::findOrFail($id);
   
-}
-      
+      // Validation des champs du formulaire
+      $validated = $request->validate([
+          'first_name' => 'nullable|string|max:255',
+          'last_name' => 'nullable|string|max:255',
+          'phone' => 'nullable|string|max:15',
+          'email' => 'nullable|email|max:255',
+          'role' => 'nullable|in:admin,super-admin', // Validation du rôle
+          'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+      ]);
+  
+      // Mise à jour des champs dans la table 'profiles' via le Query Builder
+      if ($request->has('first_name')) {
+          DB::table('profiles')
+              ->where('user_id', $user->id)
+              ->update(['first_name' => $request->input('first_name')]);
+      }
+  
+      if ($request->has('last_name')) {
+          DB::table('profiles')
+              ->where('user_id', $user->id)
+              ->update(['last_name' => $request->input('last_name')]);
+      }
+  
+      if ($request->has('phone')) {
+          DB::table('profiles')
+              ->where('user_id', $user->id)
+              ->update(['phone' => $request->input('phone')]);
+      }
+  
+      // Mise à jour de l'email dans la table 'users' via le Query Builder
+      if ($request->has('email')) {
+          DB::table('users')
+              ->where('id', $user->id)
+              ->update(['email' => $request->input('email')]);
+      }
+  
+      // Mise à jour du rôle si la valeur est valide et présente
+      if ($request->has('role') && in_array($request->input('role'), ['admin', 'super-admin'])) {
+          DB::table('users')
+              ->where('id', $user->id)
+              ->update(['role' => $request->input('role')]);
+      }
+  
+      // Traitement de l'image (si une nouvelle image est envoyée)
+      if ($request->hasFile('image') && $request->file('image')->isValid()) {
+          $destinationPath = 'profiles/admin';  // Répertoire où les images seront stockées
+          $fileName = time() . '_' . $request->file('image')->getClientOriginalName(); // Crée un nom unique pour l'image
+          $request->file('image')->move(public_path($destinationPath), $fileName);
+          
+          $profilePicture = $destinationPath . '/' . $fileName;
+  
+          // Mise à jour de l'image de profil dans la table 'profiles'
+          DB::table('profiles')
+              ->where('user_id', $user->id)
+              ->update(['profile_picture' => $profilePicture]);
+      }
+  
+      return redirect()->route('user.showOtherProfiles', ['user' => $user]);
+  }
+}  
   
   
   
