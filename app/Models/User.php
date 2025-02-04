@@ -15,9 +15,28 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable , HasRoles;
     use SoftDeletes;
+    /**
+      * Récupère le profil associé à cet utilisateur.
+      *
+      * Cette méthode définit une relation "hasOne" entre l'utilisateur et son profil.
+      * Elle permet d'obtenir les informations du profil correspondant via $user->profile.
+      *
+      * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function profile()
     {
         return $this->hasOne(Profile::class);
+    }
+    /**
+     * Relation avec le modèle Company.
+     *
+     * Un utilisateur peut posséder plusieurs companies.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function companies(): HasMany
+    {
+        return $this->hasMany(Company::class);
     }
 
     /**

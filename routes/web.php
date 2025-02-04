@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
+//use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController; 
@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Middleware\SuperAdminMiddleware;
+use App\Http\Controllers\CompanyController;
 
 /*
 |-------------------------------------------------------------------------- 
@@ -51,12 +52,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile', [UserController::class, 'update'])->name('profile.update');
     Route::delete('/profile/{user}', [UserController::class, 'destroy'])->name('profile.destroy');
     Route::post('user/password/update', [PasswordController::class, 'update'])->name('password.update');
+    Route::get('/companies/create', [CompanyController::class, 'create'])->name('companies.create');
+    Route::post('/company/store', [CompanyController::class, 'store'])->name('company.store');
+    Route::get('/companies/list', [CompanyController::class, 'List'])->name('companies.list');
+    Route::get('/companies/deletedlist', [CompanyController::class, 'listDeleted'])->name('companies.listDeleted');
+    Route::delete('/companies/{id}', [CompanyController::class, 'destroy'])->name('companies.destroy');
+    Route::post('/compagnies/{id}/restore', [CompanyController::class, 'restore'])->name('companies.restore');
+
+
     
     // Routes pour la gestion des utilisateurs (accessibles uniquement pour le rôle super-admin)
     Route::middleware([SuperAdminMiddleware::class])->group(function () {
         Route::get('/userslist', [UserController::class, 'userslists'])->name('userslist');
         Route::get('/deletedusers', [UserController::class, 'deletedusers'])->name('deleteddusers');
-        Route::get('/usercreate', [UserController::class, 'adduser'])->name('user.create');
+        Route::get('users/create', [UserController::class, 'adduser'])->name('user.add');
         Route::post('/usercreate', [UserController::class, 'create'])->name('user.create');
         Route::get('/user/updateOtherProfiles/{user}', [UserController::class, 'showOtherProfiles'])->name('user.showOtherProfiles');
         Route::post('/user/{id}/update-profile', [UserController::class, 'updateOtherProfiles'])->name('user.updateOtherProfiles');

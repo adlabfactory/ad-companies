@@ -71,7 +71,7 @@
 
       @if(Auth::user()->role === 'super-admin') <!-- Vérification du rôle -->
         <li>
-          <a href="{{ route('user.create') }}">
+          <a href="{{ route('user.add') }}">
             <iconify-icon icon="mdi:account-plus" class="menu-icon"></iconify-icon>
             <span>Add User</span>
           </a>
@@ -84,15 +84,19 @@
           <span>Profile</span>
         </a>
       </li>
-
-      @if(Auth::user()->role === 'admin' || Auth::user()->role === 'super-admin') <!-- Vérification du rôle -->
-        <li>
-          <a href="chat-message.html">
-            <iconify-icon icon="mdi:cog" class="menu-icon"></iconify-icon>
-            <span>Settings</span>
-          </a>
-        </li>
-      @endif
+      <li>
+        <a href="{{ route('companies.create') }}">
+            <iconify-icon icon="fa6-solid:building" class="menu-icon"></iconify-icon>
+            <span>Add Companies</span>
+        </a>
+    </li>    
+    <li>
+      <a href="{{ route('companies.list') }}">
+        <iconify-icon icon="mdi:home-city" class="menu-icon"></iconify-icon>
+          <span>Companies List</span>
+      </a>
+  </li>    
+      
     </ul>
   </div>
 </aside>
