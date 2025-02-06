@@ -1,4 +1,20 @@
 <x-layout>
+    @if(session('success'))
+    <div id="success-alert" class="alert alert-success">
+        {{ session('success') }}
+    </div>
+
+    <script>
+        setTimeout(function() {
+            let alert = document.getElementById('success-alert');
+            if (alert) {
+                alert.style.transition = "opacity 0.5s";
+                alert.style.opacity = "0";
+                setTimeout(() => alert.remove(), 500); // Supprime complètement l'élément après l'animation
+            }
+        }, 5000);
+    </script>
+@endif
     <style>
         .user-grid-card {
     min-height: 350px; /* Ajustez selon la hauteur que vous souhaitez */
@@ -116,65 +132,107 @@
                            
                             <!-- Upload Image End -->
                             <form action="{{ route('user.updateOtherProfiles', $user->id) }}" method="post" enctype="multipart/form-data">
-                                @csrf <!-- Protection CSRF -->
+                                @csrf 
                                 @method('POST')
+                            
                                 <div class="mb-24 mt-16">
                                     <div class="mb-3 d-flex justify-content-center align-items-center">
-                                        <img src="{{ asset($userWithProfile->profile_picture) }}" alt="Profile Image" class="img-thumbnail" style="max-width: 200px; max-height: 200px; object-fit: cover; border-radius: 50%;">
+                                        <img src="{{ asset($userWithProfile->profile_picture) }}" alt="Profile Image" class="img-thumbnail" 
+                                             style="max-width: 200px; max-height: 200px; object-fit: cover; border-radius: 50%;">
                                     </div>
                                 </div>                                
+                            
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="mb-20">
-                                            <label for="name" class="form-label fw-semibold text-primary-light text-sm mb-8">First Name<span class="text-danger-600">*</span></label>
-                                            <input type="text" class="form-control radius-8" id="name" name="first_name" value="{{ $userWithProfile->first_name }}" placeholder="Enter Full Name">
+                                            <label for="name" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                First Name <span class="text-danger-600">*</span>
+                                            </label>
+                                            <input type="text" class="form-control radius-8 @error('first_name') is-invalid @enderror" 
+                                                   id="name" name="first_name" value="{{ old('first_name', $userWithProfile->first_name) }}" 
+                                                   placeholder="Enter Full Name">
+                                            @error('first_name')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
+                            
                                     <div class="col-sm-12">
                                         <div class="mb-20">
-                                            <label for="last_name" class="form-label fw-semibold text-primary-light text-sm mb-8">Last Name <span class="text-danger-600">*</span></label>
-                                            <input type="text" class="form-control radius-8" id="last_name" name="last_name" value="{{ $userWithProfile->last_name }}" placeholder="Enter Last Name">
+                                            <label for="last_name" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                Last Name <span class="text-danger-600">*</span>
+                                            </label>
+                                            <input type="text" class="form-control radius-8 @error('last_name') is-invalid @enderror" 
+                                                   id="last_name" name="last_name" value="{{ old('last_name', $userWithProfile->last_name) }}" 
+                                                   placeholder="Enter Last Name">
+                                            @error('last_name')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
+                            
                                     <div class="col-sm-12">
                                         <div class="mb-20">
-                                            <label for="number" class="form-label fw-semibold text-primary-light text-sm mb-8">Phone</label>
-                                            <input type="text" class="form-control radius-8" id="number" name="phone" value="{{ $userWithProfile->phone }}" placeholder="Enter phone number">
+                                            <label for="number" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                Phone
+                                            </label>
+                                            <input type="text" class="form-control radius-8 @error('phone') is-invalid @enderror" 
+                                                   id="number" name="phone" value="{{ old('phone', $userWithProfile->phone) }}" 
+                                                   placeholder="Enter phone number">
+                                            @error('phone')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
+                            
                                     <div class="col-sm-12">
                                         <div class="mb-20">
-                                            <label for="email" class="form-label fw-semibold text-primary-light text-sm mb-8">Email</label>
-                                            <input type="email" class="form-control radius-8" id="email" name="email" value="{{ $user->email }}" placeholder="Enter email address">
+                                            <label for="email" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                Email
+                                            </label>
+                                            <input type="email" class="form-control radius-8 @error('email') is-invalid @enderror" 
+                                                   id="email" name="email" value="{{ old('email', $user->email) }}" 
+                                                   placeholder="Enter email address">
+                                            @error('email')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
+                            
                                     <div class="col-sm-12">
                                         <div class="mb-20">
-                                            <label for="role" class="form-label fw-semibold text-primary-light text-sm mb-8">Role</label>
+                                            <label for="role" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                Role
+                                            </label>
                                             <select class="form-control radius-8" id="role" name="role">
                                                 <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
                                                 <option value="super-admin" {{ $user->role == 'super-admin' ? 'selected' : '' }}>Super Admin</option>
                                             </select>
                                         </div>
                                     </div>
-                                    
+                            
                                     <div class="col-sm-12">
                                         <div class="mb-20">
-                                            <label for="image" class="form-label fw-semibold text-primary-light text-sm mb-8">Image</label>
-                            
-                                            <div class="mb-20">
-                                                <label for="image">Image <span class="text-danger-600">*</span></label>
-                                                <input type="file" class=" form-control radius-8" id="image" name="image" accept="image/*">
-                                            </div>
+                                            <label for="image" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                                Image
+                                            </label>
+                                            <input type="file" class="form-control radius-8 @error('image') is-invalid @enderror" 
+                                                   id="image" name="image" accept="image/*">
+                                            @error('image')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
+                            
                                 <div class="d-flex align-items-center justify-content-center gap-3 mt-4">
-                                    <button type="submit" class="btn" style="background-color: #ffda40; border-color: #ffda40; color:black; font-family: 'Arial', sans-serif; padding: 10px 90px; border-radius: 20px; font-size: 20px; font-weight: bold;">
+                                    <button type="submit" class="btn" style="background-color: #ffda40; border-color: #ffda40; color:black; 
+                                            font-family: 'Arial', sans-serif; padding: 10px 90px; border-radius: 20px; font-size: 20px; font-weight: bold;">
                                         Save
                                     </button>
                                 </div>
                             </form>
+                            
                             
                             
                         </div>

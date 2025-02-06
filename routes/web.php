@@ -57,7 +57,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/companies/list', [CompanyController::class, 'List'])->name('companies.list');
     Route::get('/companies/deletedlist', [CompanyController::class, 'listDeleted'])->name('companies.listDeleted');
     Route::delete('/companies/{id}', [CompanyController::class, 'destroy'])->name('companies.destroy');
-    Route::post('/compagnies/{id}/restore', [CompanyController::class, 'restore'])->name('companies.restore');
+    Route::post('/companies/{id}/restore', [CompanyController::class, 'restore'])->name('companies.restore');
+    Route::get('/companies/{id}/edit', [CompanyController::class, 'edit'])->name('companies.edit');
+    Route::post('/companies/{id}', [CompanyController::class, 'update'])->name('companies.update');
+    Route::post('/companies/{id}/details/update', [CompanyController::class, 'updateCompanyDetails'])->name('companies.updatecompanydetails');
+
+
 
 
     

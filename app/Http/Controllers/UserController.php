@@ -77,7 +77,7 @@ class UserController extends Controller
           'password' => 'required|min:6|confirmed',  // Laravel attend 'password_confirmation'
           'fname'    => 'required|string',
           'lname'    => 'required|string',
-          'phone'    => 'required|string',
+          'phone'    => 'nullable|digits:10',
           'image'    => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
       ]);
       $rememberToken = Str::random(60) . ':' . md5($validated['email']);  // Combine random + email hash pour garantir l'unicité
@@ -154,7 +154,7 @@ class UserController extends Controller
       $validated = $request->validate([
           'first_name' => 'nullable|string|max:255',
           'last_name' => 'nullable|string|max:255',
-          'phone' => 'nullable|string|max:15',
+          'phone'    => 'nullable|digits:10',
           'email' => 'nullable|email|max:255', // Validation de l'email pour la table 'users'
           'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Si l'image est envoyée
       ]);
@@ -222,7 +222,7 @@ class UserController extends Controller
               'user' => $user,
               'userWithProfile' => $userWithProfile
           ];
-          return view('admin-dashboard.users.other-profiles', $data);
+          return view('admin-dashboard.users.other-profiles', $data)->with('success', 'Profile updated successfully.');
      
 
     
@@ -241,7 +241,7 @@ class UserController extends Controller
       $validated = $request->validate([
           'first_name' => 'nullable|string|max:255',
           'last_name' => 'nullable|string|max:255',
-          'phone' => 'nullable|string|max:15',
+          'phone'    => 'nullable|digits:10',
           'email' => 'nullable|email|max:255',
           'role' => 'nullable|in:admin,super-admin', // Validation du rôle
           'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',

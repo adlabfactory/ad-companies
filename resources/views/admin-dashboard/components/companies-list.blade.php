@@ -54,9 +54,11 @@
                                 <td>{{ $company->devis_status }}</td>
                                 <td>{{ $company->company_website_domain }}</td>
                                 <td>
-                                    <a href="" class="btn btn-sm" style="background-color: #E8BC05; border-color: #E8BC05; color: white;">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                    <a href="{{ route('companies.edit', $company->id) }}" class="btn btn-sm" 
+                                        style="background-color: #E8BC05; border-color: #E8BC05; color: white;">
+                                         <i class="fas fa-edit"></i>
+                                     </a>
+                                     
                                     
                                     <form action="{{ route('companies.destroy', $company->id) }}" method="POST" style="display:inline-block;">
                                         @csrf

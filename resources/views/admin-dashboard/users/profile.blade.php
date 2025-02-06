@@ -1,4 +1,21 @@
 <x-layout>
+    @if(session('success'))
+    <div id="success-alert" class="alert alert-success">
+        {{ session('success') }}
+    </div>
+
+    <script>
+        setTimeout(function() {
+            let alert = document.getElementById('success-alert');
+            if (alert) {
+                alert.style.transition = "opacity 0.5s";
+                alert.style.opacity = "0";
+                setTimeout(() => alert.remove(), 500); // Supprime complètement l'élément après l'animation
+            }
+        }, 5000);
+    </script>
+@endif
+
     <style>
         .user-grid-card {
     min-height: 350px; /* Ajustez selon la hauteur que vous souhaitez */
@@ -13,6 +30,8 @@
 .card-body {
     flex-grow: 1; /* Permet à l'élément de prendre toute la hauteur restante */
 }
+
+
 
     </style>
  <div class="dashboard-main-body">
@@ -127,48 +146,66 @@
                             <!-- Upload Image End -->
                             <form action="{{ route('profile.update') }}" method="post" enctype="multipart/form-data">
                                 @csrf <!-- Protection CSRF -->
-                                @method('POST') <!-- Méthode HTTP PATCH -->
+                                @method('Post')
+                                
                                 <div class="mb-24 mt-16">
                                     <div class="mb-3 d-flex justify-content-center align-items-center">
                                         <img src="{{ asset($userWithProfile->profile_picture) }}" alt="Profile Image" class="img-thumbnail" style="max-width: 200px; max-height: 200px; object-fit: cover; border-radius: 50%;">
                                     </div>
-                                </div>                                
+                                </div>
+                            
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="mb-20">
-                                            <label for="name" class="form-label fw-semibold text-primary-light text-sm mb-8">First Name<span class="text-danger-600">*</span></label>
-                                            <input type="text" class="form-control radius-8" id="name" name="first_name" value="{{ $userWithProfile->first_name }}" placeholder="Enter Full Name">
+                                            <label for="first_name" class="form-label fw-semibold text-primary-light text-sm mb-8">First Name <span class="text-danger-600"></span></label>
+                                            <input type="text" class="form-control radius-8" id="first_name" name="first_name" value="{{ old('first_name', $userWithProfile->first_name) }}" placeholder="Enter First Name">
+                                            @error('first_name')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
+                            
                                     <div class="col-sm-12">
                                         <div class="mb-20">
-                                            <label for="last_name" class="form-label fw-semibold text-primary-light text-sm mb-8">Last Name <span class="text-danger-600">*</span></label>
-                                            <input type="text" class="form-control radius-8" id="last_name" name="last_name" value="{{ $userWithProfile->last_name }}" placeholder="Enter Last Name">
+                                            <label for="last_name" class="form-label fw-semibold text-primary-light text-sm mb-8">Last Name <span class="text-danger-600"></span></label>
+                                            <input type="text" class="form-control radius-8" id="last_name" name="last_name" value="{{ old('last_name', $userWithProfile->last_name) }}" placeholder="Enter Last Name">
+                                            @error('last_name')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
+                            
                                     <div class="col-sm-12">
                                         <div class="mb-20">
-                                            <label for="number" class="form-label fw-semibold text-primary-light text-sm mb-8">Phone</label>
-                                            <input type="text" class="form-control radius-8" id="number" name="phone" value="{{ $userWithProfile->phone }}" placeholder="Enter phone number">
+                                            <label for="phone" class="form-label fw-semibold text-primary-light text-sm mb-8">Phone</label>
+                                            <input type="text" class="form-control radius-8" id="phone" name="phone" value="{{ old('phone', $userWithProfile->phone) }}" placeholder="Enter phone number">
+                                            @error('phone')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
+                            
                                     <div class="col-sm-12">
                                         <div class="mb-20">
                                             <label for="email" class="form-label fw-semibold text-primary-light text-sm mb-8">Email</label>
-                                            <input type="email" class="form-control radius-8" id="email" name="email" value="{{ $user->email }}" placeholder="Enter email address">
+                                            <input type="email" class="form-control radius-8" id="email" name="email" value="{{ old('email', $user->email) }}" placeholder="Enter email address">
+                                            @error('email')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
+                            
                                     <div class="col-sm-12">
                                         <div class="mb-20">
                                             <label for="image" class="form-label fw-semibold text-primary-light text-sm mb-8">Image</label>
-                            
-                                            <div class="mb-20">
-                                                <label for="image">Image <span class="text-danger-600">*</span></label>
-                                                <input type="file" class=" form-control radius-8" id="image" name="image" accept="image/*">
-                                            </div>
+                                            <input type="file" class="form-control radius-8" id="image" name="image" accept="image/*">
+                                            @error('image')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
+                            
                                 <div class="d-flex align-items-center justify-content-center gap-3 mt-4">
                                     <button type="submit" class="btn" style="background-color: #ffda40; border-color: #ffda40; color:black; font-family: 'Arial', sans-serif; padding: 10px 90px; border-radius: 20px; font-size: 20px; font-weight: bold;">
                                         Save
@@ -182,28 +219,48 @@
                         <div class="tab-pane fade" id="pills-change-passwork" role="tabpanel" aria-labelledby="pills-change-passwork-tab" tabindex="0">
                             <form method="POST" action="{{ route('password.update') }}">
                                 @csrf
+                            
                                 <div class="mb-20">
-                                    <label for="your-password" class="form-label fw-semibold text-primary-light text-sm mb-8">New Password <span class="text-danger-600">*</span></label>
+                                    <label for="your-password" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        New Password <span class="text-danger-600">*</span>
+                                    </label>
                                     <div class="position-relative">
-                                        <input type="password" class="form-control radius-8" id="your-password" name="password" placeholder="Enter New Password*" required>
-                                        <span class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light" data-toggle="#your-password"></span>
+                                        <input type="password" class="form-control radius-8 @error('password') is-invalid @enderror" 
+                                               id="your-password" name="password" placeholder="Enter New Password*" required>
+                                        <span class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light" 
+                                              data-toggle="#your-password"></span>
                                     </div>
+                                    @error('password')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             
                                 <div class="mb-20">
-                                    <label for="confirm-password" class="form-label fw-semibold text-primary-light text-sm mb-8">Confirmed Password <span class="text-danger-600">*</span></label>
+                                    <label for="confirm-password" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Confirm Password <span class="text-danger-600">*</span>
+                                    </label>
                                     <div class="position-relative">
-                                        <input type="password" class="form-control radius-8" id="confirm-password" name="password_confirmation" placeholder="Confirm Password*" required>
-                                        <span class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light" data-toggle="#confirm-password"></span>
+                                        <input type="password" class="form-control radius-8" id="confirm-password" 
+                                               name="password_confirmation" placeholder="Confirm Password*" required>
+                                        <span class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light" 
+                                              data-toggle="#confirm-password"></span>
                                     </div>
                                 </div>
                             
                                 <div class="d-flex align-items-center justify-content-center gap-3 mt-4">
-                                    <button type="submit" class="btn" style="background-color: #ffda40; border-color: #ffda40; color:black; font-family: 'Arial', sans-serif; padding: 10px 90px; border-radius: 20px; font-size: 20px; font-weight: bold;">
+                                    <button type="submit" class="btn" style="background-color: #ffda40; 
+                                    border-color: #ffda40; 
+                                    color:black; 
+                                    font-family: 'Arial', sans-serif; 
+                                    padding: 10px 90px; 
+                                    border-radius: 20px; 
+                                    font-size: 20px; 
+                                    font-weight: bold;">
                                         Save
                                     </button>
                                 </div>
                             </form>
+                            
                             
                         </div>
                     </div>
@@ -268,4 +325,6 @@
         </div>
     </div>
 </div>
+
+
 </x-layout>

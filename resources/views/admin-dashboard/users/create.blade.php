@@ -1,5 +1,20 @@
 <x-layout>
+    @if(session('success'))
+    <div id="success-alert" class="alert alert-success">
+        {{ session('success') }}
+    </div>
 
+    <script>
+        setTimeout(function() {
+            let alert = document.getElementById('success-alert');
+            if (alert) {
+                alert.style.transition = "opacity 0.5s";
+                alert.style.opacity = "0";
+                setTimeout(() => alert.remove(), 500); // Supprime complètement l'élément après l'animation
+            }
+        }, 5000);
+    </script>
+@endif
    <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
       <style>
         .form-control {
@@ -42,57 +57,76 @@
                             <div class="d-flex justify-content-center mb-16">
                                 <img src="https://adlabfactory.com/wp-content/uploads/2024/12/Adlab-dark-Logo-siteweb.png" width="200" height="250" />
                             </div>
-                             <form action="{{ route('user.create') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('user.create') }}" method="post" enctype="multipart/form-data">
                                 @csrf  <!-- Protection contre les attaques CSRF -->
-                                
+                            
                                 <div class="mb-20">
                                     <label for="fname">First Name <span class="text-danger-600">*</span></label>
-                                    <input type="text" class=" rounded-pill form-control radius-8" id="fname" name="fname" placeholder="Enter First Name" required>
+                                    <input type="text" class="rounded-pill form-control radius-8 @error('fname') is-invalid @enderror" id="fname" name="fname" placeholder="Enter First Name" value="{{ old('fname') }}" required>
+                                    @error('fname')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                
+                            
                                 <div class="mb-20">
                                     <label for="lname">Last Name <span class="text-danger-600">*</span></label>
-                                    <input type="text" class=" form-control radius-8" id="lname" name="lname" placeholder="Enter Last Name" required>
+                                    <input type="text" class="form-control radius-8 @error('lname') is-invalid @enderror" id="lname" name="lname" placeholder="Enter Last Name" value="{{ old('lname') }}" required>
+                                    @error('lname')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                
+                            
                                 <div class="mb-20">
                                     <label for="phone">Phone <span class="text-danger-600">*</span></label>
-                                    <input type="text" class="form-control radius-8" id="phone" name="phone" placeholder="Enter Phone Number" required>
+                                    <input type="text" class="form-control radius-8 @error('phone') is-invalid @enderror" id="phone" name="phone" placeholder="Enter Phone Number" value="{{ old('phone') }}" required>
+                                    @error('phone')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                
+                            
                                 <div class="mb-20">
                                     <label for="email">Email <span class="text-danger-600">*</span></label>
-                                    <input type="email" class="form-control  radius-8" id="email" name="email" placeholder="Enter email address" required>
+                                    <input type="email" class="form-control radius-8 @error('email') is-invalid @enderror" id="email" name="email" placeholder="Enter email address" value="{{ old('email') }}" required>
+                                    @error('email')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                
+                            
                                 <div class="mb-20">
                                     <label for="password">Password <span class="text-danger-600">*</span></label>
-                                    <input type="password" class="form-control radius-8" id="password" name="password" placeholder="Enter Password" required>
+                                    <input type="password" class="form-control radius-8 @error('password') is-invalid @enderror" id="password" name="password" placeholder="Enter Password" required>
+                                    @error('password')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                
+                            
                                 <div class="mb-20">
                                     <label for="password_confirmation">Confirm Password <span class="text-danger-600">*</span></label>
                                     <input type="password" class="form-control radius-8" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
                                 </div>
-                                
+                            
                                 <div class="mb-20">
                                     <label for="image">Image <span class="text-danger-600">*</span></label>
-                                    <input type="file" class=" form-control radius-8" id="image" name="image" accept="image/*">
+                                    <input type="file" class="form-control radius-8 @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
+                                    @error('image')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
+                            
                                 <div class="d-flex align-items-center justify-content-center gap-3">
                                     <button type="submit" class="btn" style="background-color: #ffda40; 
                                     border-color: #ffda40; 
                                     color: #000; 
                                     font-family: 'Arial', sans-serif;
-                                    padding: 10px 90px; /* Augmenter la taille */
-                                    border-radius: 20px; /* Coins arrondis */
-                                    font-size: 20px; /* Ajuster la taille du texte */
+                                    padding: 10px 90px;
+                                    border-radius: 20px;
+                                    font-size: 20px;
                                     font-weight: bold;">
-                                    Save
+                                        Save
                                     </button>
-
                                 </div>                                                             
                             </form>
+                            
                             
                          </div>
                      </div>

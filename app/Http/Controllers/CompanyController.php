@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Validation\Rule;
 use App\Models\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -73,8 +73,8 @@ public function listDeleted()
              'company_name' => 'required|string|max:255',
              'company_category' => 'required|string|max:255',
              'company_address' => 'required|string|max:500',
-             'company_phone' => 'required|string|max:20',
-             'company_rc' => 'required|string|max:1001|unique:companies,company_rc',
+            'company_phone' => 'nullable|digits:10',
+             'company_rc' => 'required|string|max:1001',
              'company_website_domain' => 'required|url|max:255',
              'company_description' => 'nullable|string',
              'company_email' => 'required|email|unique:companies,company_email',
@@ -142,18 +142,141 @@ public function listDeleted()
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Company $company)
-    {
-        //
-    }
+    public function edit($id)
+{
+    $company = Company::findOrFail($id);
+    return view('admin-dashboard.companies.edit', compact('company'));
+}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Company $company)
+    public function update(Request $request, $companyId)
     {
-        //
+        // Récupérer l'entreprise
+        $company = Company::findOrFail($companyId);
+        $request->validate([
+            'company_name'         => 'required|string|max:255',
+            'category'             => 'nullable|string|max:255',
+            'company_phone'        => 'nullable|digits:10',
+            'company_email'        => [
+                'nullable',
+                'email',
+                'max:255',
+                Rule::unique('companies', 'company_email')->ignore($company->id),
+            ],
+            'company_address'      => 'nullable|string|max:255',
+            'contact_person_name'  => 'nullable|string|max:255',
+            'contact_person_role'  => 'nullable|string|max:255',
+            'company_logo'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);        
+
+        if ($request->has('company_name')) {
+            DB::table('companies')
+                ->where('id', $company->id)
+                ->update(['company_name' => $request->input('company_name')]);
+        }
+    
+        if ($request->has('category')) {
+            DB::table('companies')
+                ->where('id', $company->id)
+                ->update(['company_category' => $request->input('category')]);
+        }
+    
+        if ($request->has('company_phone')) {
+            DB::table('companies')
+                ->where('id', $company->id)
+                ->update(['company_phone' => $request->input('company_phone')]);
+        }
+    
+        if ($request->has('company_email')) {
+            DB::table('companies')
+                ->where('id', $company->id)
+                ->update(['company_email' => $request->input('company_email')]);
+        }
+    
+        if ($request->has('company_address')) {
+            DB::table('companies')
+                ->where('id', $company->id)
+                ->update(['company_address' => $request->input('company_address')]);
+        }
+    
+        if ($request->has('contact_person_name')) {
+            DB::table('companies')
+                ->where('id', $company->id)
+                ->update(['contact_person_name' => $request->input('contact_person_name')]);
+        }
+    
+        if ($request->has('contact_person_role')) {
+            DB::table('companies')
+                ->where('id', $company->id)
+                ->update(['contact_person_role' => $request->input('contact_person_role')]);
+        }
+    
+        // Traitement de l'image (logo de l'entreprise)
+        if ($request->hasFile('company_logo') && $request->file('company_logo')->isValid()) {
+            $destinationPath = 'companies/logos';  // Répertoire où les images seront stockées
+          $fileName = time() . '_' . $request->file('company_logo')->getClientOriginalName(); // Crée un nom unique pour l'image
+          $request->file('company_logo')->move(public_path($destinationPath), $fileName);
+          $companyPicture = $destinationPath . '/' . $fileName;
+
+            
+            // Mise à jour du logo dans la base de données
+            DB::table('companies')
+                ->where('id', $company->id)
+                ->update(['logo' => $companyPicture ]);
+        }
+        
+    
+        // Retourner avec un message de succès
+       // Retourner avec un message de succès
+        return redirect()->route('companies.edit', ['id' => $company->id])->with('success', 'Company details updated successfully!');
+
     }
+
+    
+    public function updateCompanyDetails(Request $request, $companyId)
+{
+    // Récupérer l'entreprise à partir de l'ID
+    $company = Company::findOrFail($companyId);
+
+    // Validation des données envoyées
+    $request->validate([
+        'subscription_start' => 'required|date',
+        'subscription_end' => 'required|date|after_or_equal:subscription_start', // Assure que la date de fin est après ou égale à la date de début
+        'status' => 'required|in:active,inactive',
+        'devis_status' => 'required|in:approved,pending,rejected',
+        'company_website_domaine' => 'nullable|url',
+    ]);
+
+    // Mise à jour des données de l'entreprise
+    if ($request->has('subscription_start')) {
+        $company->subscription_start_at = $request->input('subscription_start');
+    }
+
+    if ($request->has('subscription_end')) {
+        $company->subscription_end_at = $request->input('subscription_end');
+    }
+
+    if ($request->has('status')) {
+        $company->status = $request->input('status');
+    }
+
+    if ($request->has('devis_status')) {
+        $company->devis_status = $request->input('devis_status');
+    }
+
+    if ($request->has('company_website_domaine')) {
+        $company->company_website_domain = $request->input('company_website_domaine');
+    }
+
+    // Sauvegarder les modifications
+    $company->save();
+
+    // Redirection avec message de succès
+    return redirect()->route('companies.edit', $company->id)->with('success', 'Company details updated successfully!');
+}
+
 
     /**
      * Remove the specified resource from storage.
