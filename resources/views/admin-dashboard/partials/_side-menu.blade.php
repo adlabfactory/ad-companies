@@ -96,7 +96,18 @@
           <span>Companies List</span>
       </a>
   </li>    
-      
+  <li>
+    <a href="{{ route('packs.create') }}">
+      <iconify-icon icon="mdi:package-variant-closed" class="menu-icon"></iconify-icon>
+      <span>Add Pack</span>
+    </a>
+ </li>    
+ <li>
+  <a href="{{ route('packs.list') }}">
+    <iconify-icon icon="mdi:view-list" class="menu-icon"></iconify-icon>
+    <span>Packs List</span>
+  </a>
+</li>  
     </ul>
   </div>
 </aside>

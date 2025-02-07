@@ -10,6 +10,8 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\PackController;
+use Illuminate\Support\Facades\DB;
 
 /*
 |-------------------------------------------------------------------------- 
@@ -61,6 +63,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/companies/{id}/edit', [CompanyController::class, 'edit'])->name('companies.edit');
     Route::post('/companies/{id}', [CompanyController::class, 'update'])->name('companies.update');
     Route::post('/companies/{id}/details/update', [CompanyController::class, 'updateCompanyDetails'])->name('companies.updatecompanydetails');
+    Route::get('/packs/create', [PackController::class, 'create'])->name('packs.create');
+    Route::post('/packs/store', [PackController::class, 'store'])->name('packs.store');
+    Route::get('/packs/list', [PackController::class, 'list'])->name('packs.list');
+    Route::delete('/packs/{id}', [PackController::class, 'destroy'])->name('packs.destroy');
+    Route::get('/packs/deletedlist', [PackController::class, 'listdeleted'])->name('packs.listdeleted');
+    Route::post('/packs/{id}/restore', [PackController::class, 'restore'])->name('packs.restore');
+    Route::get('/packs/edit/{id}', [PackController::class, 'edit'])->name('packs.edit');
+    Route::post('/packs/update/{id}', [PackController::class, 'update'])->name('packs.update');
+    Route::get('/packs/search', [PackController::class, 'search'])->name('packs.search');
+
+
+
 
 
 
