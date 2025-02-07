@@ -16,7 +16,7 @@
                 </form>
             </div>
             <div class="d-flex gap-2"> <!-- Utilisation de Flexbox avec un espace entre les éléments -->
-                <a href="{{ route('user.create') }}" class="btn btn-outline-warning-600 radius-8 px-20 py-11">Add User</a>
+                <a href="{{ route('user.add') }}" class="btn btn-outline-warning-600 radius-8 px-20 py-11">Add User</a>
                 <a href="{{ route('deleteddusers') }}" class="btn btn-outline-dark radius-8 px-20 py-11">
                     <i class="fas fa-trash-alt"></i> 
                 </a>

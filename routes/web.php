@@ -11,7 +11,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PackController;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\FeatureController;
 
 /*
 |-------------------------------------------------------------------------- 
@@ -72,6 +72,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/packs/edit/{id}', [PackController::class, 'edit'])->name('packs.edit');
     Route::post('/packs/update/{id}', [PackController::class, 'update'])->name('packs.update');
     Route::get('/packs/search', [PackController::class, 'search'])->name('packs.search');
+    Route::get('/features/create', [FeatureController::class, 'create'])->name('features.create');
+    Route::post('/features', [FeatureController::class, 'store'])->name('features.store');
+    Route::get('/packs/{id}', [PackController::class, 'show'])->name('packs.show');
+    Route::patch('/toggle-feature/{pack}/{feature}', [PackController::class, 'toggleFeature'])->name('toggle.feature');
+    Route::get('/pack/{pack}/feature/{feature}/edit', [FeatureController::class, 'edit'])->name('features.edit');
+    Route::patch('/pack/{pack}/feature/{feature}', [FeatureController::class, 'update'])->name('features.update');
+
+
 
 
 

@@ -107,6 +107,11 @@
     <iconify-icon icon="mdi:view-list" class="menu-icon"></iconify-icon>
     <span>Packs List</span>
   </a>
+  <a href="{{ route('features.create') }}">
+    <iconify-icon icon="mdi:star-circle" class="menu-icon"></iconify-icon>
+    <span>Add Feature</span>
+</a>
+
 </li>  
     </ul>
   </div>

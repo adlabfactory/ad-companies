@@ -40,11 +40,11 @@
                     
                     <div class="card-body text-center">
                         <h6 class="card-title font-weight-bold text-dark" style="font-size: 1.2rem;">{{ $pack->pack_name }}</h6>
-                        <p class="card-text text-dark" style="font-size: 1rem;">{{ $pack->price }} DH</p>
+                        <p class="card-text text-dark" style="font-size: 1rem;">{{ $pack->price }} $</p>
 
                         <!-- Buttons -->
                         <div class="d-flex justify-content-center gap-2">
-                            <a href="" class="btn btn-sm btn-outline-primary">View Details</a>
+                            <a href="{{ route('packs.show', $pack->id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
                             <a href="{{ route('packs.edit', $pack->id) }}" class="btn btn-sm btn-outline-warning">
                                 Edit
                             </a>                            

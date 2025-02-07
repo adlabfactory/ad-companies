@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Pack;
+use App\Models\PackFeature;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -77,9 +78,36 @@ class PackController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id) {
+        $pack = Pack::with('features')->findOrFail($id);
+        return view('admin-dashboard.packs.show', compact('pack'));
+    }
+   
+
+    /**
+     * 
+     * Edit Toggle 
+     */
+    public function toggleFeature(Request $request, $packId, $featureId)
     {
-        //
+        $pack = Pack::findOrFail($packId);
+
+        // Vérifier si la relation existe dans la table pivot
+        if ($pack->features()->where('features.id', $featureId)->exists()) {
+            // Récupérer l'état actuel de `is_enabled`
+            $currentState = $pack->features()->where('features.id', $featureId)->first()->pivot->is_enabled;
+
+            // Inverser l'état (1 → 0 ou 0 → 1)
+            $newState = !$currentState;
+
+            // Mettre à jour la valeur dans la table pivot
+            $pack->features()->updateExistingPivot($featureId, [
+                'is_enabled' => $newState,
+            ]);
+        }
+
+        // Recharger la même page
+        return back();
     }
 
     /**
