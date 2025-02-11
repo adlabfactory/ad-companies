@@ -14,6 +14,7 @@ class Company extends  Authenticatable
 
     use HasFactory, Notifiable;
     use SoftDeletes;
+    protected $guard = 'company'; // Définir le guard ici
 
     /**
      * Les attributs pouvant être assignés en masse.
@@ -73,4 +74,16 @@ class Company extends  Authenticatable
     {
         return $this->belongsTo(User::class);
     }
+      /**
+     * Relation avec le modèle Project.
+     *
+     * Une Company contient plusieurs projects.
+     *
+    
+     */
+       public function projects()
+   {
+        return $this->hasMany(Project::class);
+   }
+
 }

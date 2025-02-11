@@ -1,20 +1,17 @@
 <x-layout>
     @if(session('success'))
-    <div id="success-alert" class="alert alert-success">
-        {{ session('success') }}
-    </div>
-
     <script>
-        setTimeout(function() {
-            let alert = document.getElementById('success-alert');
-            if (alert) {
-                alert.style.transition = "opacity 0.5s";
-                alert.style.opacity = "0";
-                setTimeout(() => alert.remove(), 500); // Supprime complètement l'élément après l'animation
+        Swal.fire({
+            icon: 'success',
+            title: 'Succès!',
+            text: "{{ session('success') }}",
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'custom-confirm-button'
             }
-        }, 5000);
+        });
     </script>
-@endif
+    @endif
    <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
       <style>
         .form-control {
@@ -42,6 +39,14 @@
         border-color: #ffda40; /* Bordure jaune pendant le focus */
         outline: none; /* Retirer l'outline bleu par défaut */
         box-shadow: 0 0 0 2px rgba(255, 218, 64, 0.5); /* Ombre jaune au focus */
+    }
+    .custom-confirm-button {
+        background-color: #ffda40 !important; /* Couleur de fond */
+        color: black !important; /* Couleur du texte */
+        border: 2px solid #ff8c00 !important; /* Couleur de la bordure */
+        border-radius: 5px; /* Coins arrondis */
+        padding: 10px 20px;
+        font-weight: bold;
     }
 
 

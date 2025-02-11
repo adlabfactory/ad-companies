@@ -9,6 +9,14 @@ use Illuminate\Http\Request;
 
 class PackController extends Controller
 {
+    public function packslist()
+    {
+        // Récupérer les packs avec pagination (10 packs par page)
+        $packs = Pack::paginate(10);
+
+        // Retourner la vue avec les packs paginés
+        return view('admin-dashboard.packs.packslist-company', compact('packs'));
+    }
     public function list()
     {
         // Récupérer les packs avec pagination (10 packs par page)

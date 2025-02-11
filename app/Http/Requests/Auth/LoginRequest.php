@@ -82,4 +82,22 @@ class LoginRequest extends FormRequest
     {
         return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
     }
+    public function authenticateUsingGuard(string $guard)
+{
+    $this->ensureIsNotRateLimited();
+
+    $credentials = $this->only('email', 'password');
+    $credentials['company_email'] = $credentials['email'];
+    unset($credentials['email']);
+
+    if (!Auth::guard($guard)->attempt($credentials, $this->boolean('remember'))) {
+        RateLimiter::hit($this->throttleKey());
+
+        throw ValidationException::withMessages([
+            'email' => __('auth.failed'),
+        ]);
+    }
+
+    RateLimiter::clear($this->throttleKey());
+}
 }

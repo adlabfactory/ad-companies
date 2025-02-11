@@ -12,6 +12,8 @@ use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PackController;
 use App\Http\Controllers\FeatureController;
+use App\Http\Controllers\CompanyAuthController;
+use App\Http\Middleware\EitherAuthenticationMiddleware;
 
 /*
 |-------------------------------------------------------------------------- 
@@ -38,14 +40,16 @@ Route::middleware('guest')->group(function () {
     // Routes pour la connexion
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+   // Routes pour la connexion de la compagnie
+   Route::get('company/login', [CompanyAuthController::class, 'showLoginForm'])->name('company.login');
+   Route::post('company/login', [CompanyAuthController::class, 'store'])->name('company.store');
+ 
 });
 
-// Groupe pour les utilisateurs authentifiés
 Route::middleware('auth')->group(function () {
     // Route pour le tableau de bord
     Route::get('/home', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
-    
     // Route pour la déconnexion
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     
@@ -74,20 +78,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/packs/search', [PackController::class, 'search'])->name('packs.search');
     Route::get('/features/create', [FeatureController::class, 'create'])->name('features.create');
     Route::post('/features', [FeatureController::class, 'store'])->name('features.store');
-    Route::get('/packs/{id}', [PackController::class, 'show'])->name('packs.show');
+    //Route::get('/packs/{id}', [PackController::class, 'show'])->name('packs.show');
     Route::patch('/toggle-feature/{pack}/{feature}', [PackController::class, 'toggleFeature'])->name('toggle.feature');
     Route::get('/pack/{pack}/feature/{feature}/edit', [FeatureController::class, 'edit'])->name('features.edit');
-    Route::patch('/pack/{pack}/feature/{feature}', [FeatureController::class, 'update'])->name('features.update');
-
-
-
-
-
-
-
-
-
-    
+    Route::patch('/pack/{pack}/feature/{feature}', [FeatureController::class, 'update'])->name('features.');
     // Routes pour la gestion des utilisateurs (accessibles uniquement pour le rôle super-admin)
     Route::middleware([SuperAdminMiddleware::class])->group(function () {
         Route::get('/userslist', [UserController::class, 'userslists'])->name('userslist');
@@ -98,6 +92,20 @@ Route::middleware('auth')->group(function () {
         Route::post('/user/{id}/update-profile', [UserController::class, 'updateOtherProfiles'])->name('user.updateOtherProfiles');
         Route::get('profile/{user}', [UserController::class, 'restore'])->name('user.restore');
     });
+    
+
 });
+Route::middleware([EitherAuthenticationMiddleware::class])->get('/packs/{id}', [PackController::class, 'show'])->name('packs.show');
+Route::middleware('auth:company')->group(function () {
+    Route::post('/company/logout', [CompanyAuthController::class, 'destroy'])
+        ->name('company.logout');
+
+    Route::get('/company/dashboard', function () {
+        return view('admin-dashboard.companies.home'); 
+    })->name('company.dashboard');
+    Route::get('/company/packs/list', [PackController::class, 'packslist'])->name('packs.packslist');
+});
+
+
 
 
