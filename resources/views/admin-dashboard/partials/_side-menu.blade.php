@@ -41,7 +41,7 @@
   </button>
 
   <div>
-    <a href="index.html" class="sidebar-logo">
+    <a href="#" class="sidebar-logo">
       <img src="https://adlabfactory.com/wp-content/uploads/2024/12/Adlab-dark-Logo-siteweb.png" width="150" />
     </a>
   </div>
@@ -76,6 +76,12 @@
         <a href="{{ route('packs.packslist') }}">
           <iconify-icon icon="mdi:view-list" class="menu-icon"></iconify-icon>
           <span>Packs List</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ route('projects.create') }}">
+          <iconify-icon icon="mdi:folder-plus" class="menu-icon"></iconify-icon>
+          <span>Add Project</span>
         </a>
       </li>
       @endif
@@ -138,6 +144,12 @@
           </a>
         </li>
       @endif
+      <li>
+        <a href="{{ route('projects.index') }}">
+            <iconify-icon icon="mdi:folder-multiple" class="menu-icon"></iconify-icon> <!-- Changer l'icône ici -->
+            <span>Projects List</span>
+        </a>
+    </li>    
     </ul>
   </div>
   

@@ -24,11 +24,12 @@
             </button>
 
         </form>
-
+        @if (Auth::guard('web')->check())
         <!-- Bouton pour afficher les packs supprimés -->
         <a href="{{route('packs.listdeleted')}}" class="btn btn-dark shadow-sm">
             <i class="fas fa-trash-restore"></i> View Deleted Packs
         </a>
+        @endif
     </div>
 
     <div class="row">
@@ -45,10 +46,11 @@
                         <!-- Buttons -->
                         <div class="d-flex justify-content-center gap-2">
                             <a href="{{ route('packs.show', $pack->id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            @if (Auth::guard('web')->check())
                             <a href="{{ route('packs.edit', $pack->id) }}" class="btn btn-sm btn-outline-warning">
                                 Edit
-                            </a>                            
-
+                            </a>
+                        
                             <form action="{{ route('packs.destroy', $pack->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
@@ -56,6 +58,8 @@
                                     Delete
                                 </button>
                             </form>
+                        @endif
+                        
                         </div>
                     </div>
                 </div>

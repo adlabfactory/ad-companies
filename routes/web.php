@@ -14,6 +14,7 @@ use App\Http\Controllers\PackController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\CompanyAuthController;
 use App\Http\Middleware\EitherAuthenticationMiddleware;
+use App\Http\Controllers\ProjectController;
 
 /*
 |-------------------------------------------------------------------------- 
@@ -81,7 +82,7 @@ Route::middleware('auth')->group(function () {
     //Route::get('/packs/{id}', [PackController::class, 'show'])->name('packs.show');
     Route::patch('/toggle-feature/{pack}/{feature}', [PackController::class, 'toggleFeature'])->name('toggle.feature');
     Route::get('/pack/{pack}/feature/{feature}/edit', [FeatureController::class, 'edit'])->name('features.edit');
-    Route::patch('/pack/{pack}/feature/{feature}', [FeatureController::class, 'update'])->name('features.');
+    Route::patch('/pack/{pack}/feature/{feature}', [FeatureController::class, 'update'])->name('features.update');
     // Routes pour la gestion des utilisateurs (accessibles uniquement pour le rôle super-admin)
     Route::middleware([SuperAdminMiddleware::class])->group(function () {
         Route::get('/userslist', [UserController::class, 'userslists'])->name('userslist');
@@ -96,6 +97,10 @@ Route::middleware('auth')->group(function () {
 
 });
 Route::middleware([EitherAuthenticationMiddleware::class])->get('/packs/{id}', [PackController::class, 'show'])->name('packs.show');
+Route::middleware([EitherAuthenticationMiddleware::class])->get('/packs/list', [PackController::class, 'list'])->name('packs.list');
+Route::middleware([EitherAuthenticationMiddleware::class])->get('/packs/search', [PackController::class, 'search'])->name('packs.search');
+Route::middleware([EitherAuthenticationMiddleware::class])->get('/projects/list', [ProjectController::class, 'index'])->name('projects.index');
+Route::middleware([EitherAuthenticationMiddleware::class])->get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 Route::middleware('auth:company')->group(function () {
     Route::post('/company/logout', [CompanyAuthController::class, 'destroy'])
         ->name('company.logout');
@@ -104,6 +109,12 @@ Route::middleware('auth:company')->group(function () {
         return view('admin-dashboard.companies.home'); 
     })->name('company.dashboard');
     Route::get('/company/packs/list', [PackController::class, 'packslist'])->name('packs.packslist');
+    //Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+    Route::get('/projects/create/form', [ProjectController::class, 'create'])->name('projects.create');
+    Route::post('/projects/store', [ProjectController::class, 'store'])->name('projects.store');
+    Route::delete('/projects/{id}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+    Route::get('/projects/deleted', [ProjectController::class, 'listdeleted'])->name('projects.listdeleted');
+    Route::patch('/project/{id}/restore', [ProjectController::class, 'restore'])->name('project.restore');
 });
 
 
